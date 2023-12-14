@@ -1,16 +1,40 @@
 import TrasladoSchema from '../../models/traslado.js';
 
 export async function getRecordsTraslado(req) {
-
-    const { page = 1, limit = 10 } = req;
+    // console.log('getRecordsTraslado: ', req);
+    const { page = 1, limit = 10, search = '' } = req;
     const countRecords = await TrasladoSchema.countDocuments();
-    const records = await TrasladoSchema.find()
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .exec();
+
+    const consultaSearch = {
+        $or: [
+          { Cliente: { $regex: new RegExp(search, 'i') } }, // 'i' para que sea insensible a mayúsculas y minúsculas
+          { Ciudad: { $regex: new RegExp(search, 'i') } },
+          { Estado: { $regex: new RegExp(search, 'i') } },
+          { Vehiculo: { $regex: new RegExp(search, 'i') } },
+          { Marca: { $regex: new RegExp(search, 'i') } },
+          { Modelo: { $regex: new RegExp(search, 'i') } },
+        //   { Color: { $regex: new RegExp(search, 'i') } },
+        //   { Chofer: { $regex: new RegExp(search, 'i') } },
+        //   { Finanzas: { $regex: new RegExp(search, 'i') } },
+        ],
+    };
+
+    const countRecordsSearch = search ? await TrasladoSchema.countDocuments(consultaSearch) : 0;
+
+
+    let records = null;
+    records = await TrasladoSchema.find(search ? consultaSearch : null)
+        .limit(limit)
+        .skip((page - 1) * limit)
+        .exec();
+
+    // else records = await TrasladoSchema.find(consultaSearch)
+    //     .limit(limit)
+    //     .skip((page - 1) * limit)
+    //     .exec();
 
     return {
-            totalPages: countRecords,
+            totalRows: search ? countRecordsSearch : countRecords,
             currentPage: page,
             data: records
         };

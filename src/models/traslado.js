@@ -13,91 +13,91 @@ const TrasladoSchema = new mongoose.Schema({
     },
     Llamo: {
         type: String,
-        required: true
+        required: false
     },
     RUT_Cliente: {
         type: String,
-        required: true
+        required: false
     },
     Domicilio: {
         type: String,
-        required: true
+        required: false
     },
     Ciudad: {
         type: String,
-        required: true
+        required: false
     },
     Fecha: {
         type: String,
-        required: true
+        required: false
     },
     Estado: {
         type: String,
-        required: true
+        required: false
     },
     Vehiculo: {
         type: String,
-        required: true
+        required: false
     },
     Marca: {
         type: String,
-        required: true
+        required: false
     },
     Modelo: {
         type: String,
-        required: true
+        required: false
     },
     Color: {
         type: String,
-        required: true
+        required: false
     },
     Chofer: {
         type: String,
-        required: true
+        required: false
     },
     Finanzas: {
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     Grua: {
         type: String,
-        required: true
+        required: false
     },
     Fecha_Factura: {
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     Facturado_a: {
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     Factura: {
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     Valor_Traslado: {
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     Entrega_Factura: {
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     Recibe_Factura: {
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     Recibe_Vehiculo: {
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     Fecha_Ent_Veh: {
         type: String,
-        required: true
+        required: false
     },
     Guia: {
         type: String,
-        required: true
+        required: false
     }
  });
 
