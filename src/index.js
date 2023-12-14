@@ -13,7 +13,7 @@ class Server {
         this.app = express();
         this.middlewares();
         this.routes();
-
+        this.cors();
     }
 
     start(){
@@ -37,6 +37,15 @@ class Server {
 
     middlewares(){
         this.app.use(express.json());
+    }
+
+    cors(){
+        app.use(cors({
+            origin: '*',
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+            credentials: true,
+            optionsSuccessStatus: 204,
+          }));
     }
 
 }
