@@ -11,9 +11,9 @@ class Server {
     constructor(){
         this.port = config.PORT;
         this.app = express();
+        this.cors();
         this.middlewares();
         this.routes();
-        this.cors();
     }
 
     start(){
@@ -40,7 +40,7 @@ class Server {
     }
 
     cors(){
-        app.use(cors({
+        this.app.use(cors({
             origin: '*',
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
             credentials: true,
