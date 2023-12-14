@@ -3,7 +3,7 @@ import express from 'express';
 import {router} from './routes/index.js';
 import { handleErrorMiddleware } from './middlewares/error_handler.js';
 import mongoose from 'mongoose';
-
+import cors from 'cors';
 class Server {
    port;
    app;
