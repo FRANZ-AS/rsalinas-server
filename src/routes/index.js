@@ -1,7 +1,7 @@
 import Router from 'express';
 import {router as routerTraslado} from '../modules/traslado/traslado.routes.js';
 const router = Router();
-import {buildPDF} from './pdfKit.js';
+import {buildPDF} from '../pdf/pdfKit.js';
 import TrasladoSchema from '../models/traslado.js';
 
 router.use('/api/traslado', routerTraslado);

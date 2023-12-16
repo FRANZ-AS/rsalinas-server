@@ -184,9 +184,7 @@ const buildPDF = async (arrayDocuments, dataCallback, endCallback) => {
                   columnsSize: [ 160, 160, 160 ],
               });
 
-              // Definir el estilo del encabezado
               doc.fontSize(12).font('Helvetica-Bold');
-              // Agregar el encabezado al documento
               doc.text('Observaciones:');
               doc.fontSize(8).font('Helvetica');
               doc.text(document.Observaciones)

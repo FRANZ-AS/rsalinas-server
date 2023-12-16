@@ -1,30 +1,20 @@
 import TrasladoSchema from '../../models/traslado.js';
 
 export async function getRecordsTraslado(req) {
-    // console.log('getRecordsTraslado: ', req);
     const { 
         page = 1,
         limit = 10,
         search = '',
         filterDate = 'false',
         dateFilterType = 'Fecha',
-        dateRange: { startDate, endDate}
+        dateRange = { startDate: '', endDate: '' }
     } = req;
+
+    const { startDate = '', endDate = ''} = dateRange;
 
     const countRecords = await TrasladoSchema.countDocuments();
 
     const filters = {};
-    
-    // const filters = {
-    //     $or: [
-    //       { Cliente: { $regex: new RegExp(search, 'i') } }, // 'i' para que sea insensible a mayúsculas y minúsculas
-    //       { Ciudad: { $regex: new RegExp(search, 'i') } },
-    //       { Estado: { $regex: new RegExp(search, 'i') } },
-    //       { Vehiculo: { $regex: new RegExp(search, 'i') } },
-    //       { Marca: { $regex: new RegExp(search, 'i') } },
-    //       { Modelo: { $regex: new RegExp(search, 'i') } },
-    //     ],
-    // };
 
     if(filterDate === 'true' && startDate && endDate) {
         if(dateFilterType === 'Fecha') {
@@ -54,11 +44,6 @@ export async function getRecordsTraslado(req) {
         .limit(limit)
         .skip((page - 1) * limit)
         .exec();
-
-    // else records = await TrasladoSchema.find(filters)
-    //     .limit(limit)
-    //     .skip((page - 1) * limit)
-    //     .exec();
 
     return {
             totalRows: Object.keys(filters).length ? countRecordsSearch : countRecords,

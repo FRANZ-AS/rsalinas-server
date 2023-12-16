@@ -5,10 +5,9 @@ const router = Router();
 
 router.get('/', getTraslados);
 router.post('/', saveTraslado);
-router.patch('/:id', updateTraslado); // /api/traslado/${id}
-router.delete('/:id', deleteTraslado); // /api/traslado/${id}
+router.patch('/:id', updateTraslado); 
+router.delete('/:id', deleteTraslado);
 
-// export default router;
 export {
     router
 };
