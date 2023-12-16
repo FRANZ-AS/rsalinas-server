@@ -19,7 +19,7 @@ class Server {
     start(){
 
         // mongoDB connection
-        mongoose.connect(process.env.MONGODB_URI).then(() => {
+        mongoose.connect('mongodb+srv://rsalinasdb:wBMW3hIoTatSIKVS@salinas-db.2whie3g.mongodb.net/rsalinasdb?retryWrites=true&w=majority').then(() => {
             console.log('MongoDB connected');
         } ).catch((err) => {
             console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
