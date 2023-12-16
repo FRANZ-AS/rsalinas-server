@@ -2,7 +2,6 @@ import { getRecordsTraslado, saveRecordTraslado, updateTraslado as updateTraslad
 import { body, validationResult } from 'express-validator';
 
 export const getTraslados = async (_req, res, _next) => {
-    // console.log('getTrasladoaa: ', _req.body);
     try {
         const records = await getRecordsTraslado(_req.query);
         res.json({
@@ -13,7 +12,6 @@ export const getTraslados = async (_req, res, _next) => {
         });
 
     } catch (error) {
-        console.log('Error en traslaodos', error);
         _next({
             success: false,
             message: "Error al obtener traslados",
@@ -25,11 +23,9 @@ export const getTraslados = async (_req, res, _next) => {
 
 export const saveTraslado = async (_req, res, _next) => {
 
-    console.log('saveTraslado: ', _req.body);
     
     await Promise.all(validationsCreate.map(validation => validation.run(_req)));
     const errors = validationResult(_req);
-    console.log('errors validacion: ', errors);
 
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -46,7 +42,6 @@ export const saveTraslado = async (_req, res, _next) => {
             }
         );
     } catch (error) {
-              console.log('Error en saveTraslado', error);
         _next({
             success: false,
             message: "Error al guardar traslado",
@@ -58,11 +53,9 @@ export const saveTraslado = async (_req, res, _next) => {
 }
 
 export const updateTraslado = async (_req, res, _next) => {
-    console.log('updateTraslado: ', _req.body);
 
     await Promise.all(validationsCreate.map(validation => validation.run(_req)));
     const errors = validationResult(_req);
-    console.log('errors validacion: ', errors);
     
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -79,7 +72,6 @@ export const updateTraslado = async (_req, res, _next) => {
         });
 
     } catch (error) {
-        console.log('Error en update traslado', error);
         _next({
             success: false,
             message: "Error al actualizar traslado",
@@ -90,7 +82,6 @@ export const updateTraslado = async (_req, res, _next) => {
 }
 
 export const deleteTraslado = async (_req, res, _next) => {
-    console.log('deleteTraslado: ', _req.body);
     try {
         const id = _req.params.id;
         const record = await deleteTrasladoById(id);
@@ -101,7 +92,6 @@ export const deleteTraslado = async (_req, res, _next) => {
                 error: null
         });
     } catch (error) {
-        console.log('Error en deleteTraslado', error);
         _next({
             success: false,
             message: "Error al eliminar traslado",
