@@ -41,7 +41,7 @@ class Server {
 
     cors(){
         this.app.use(cors({
-            origin: '*',
+            origin: 'https://rsalinas-web.vercel.app',
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
             credentials: true,
             optionsSuccessStatus: 204,
