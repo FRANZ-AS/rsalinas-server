@@ -58,11 +58,26 @@ export async function saveRecordTraslado(req) {
 }
 
 export async function updateTraslado(id, req ) {
-    const updateRecord = await TrasladoSchema.findByIdAndUpdate(id, req);
+    const updateRecord = await TrasladoSchema.findByIdAndUpdate(id, req, { new: true });
     return updateRecord;
 }
 
 export async function deleteTrasladoById(id){
     const deleteRecord = await TrasladoSchema.findByIdAndDelete(id);
     return deleteRecord;
+}
+
+export async function addFilesById(id, files) {
+    const updateRecord = await TrasladoSchema.updateOne({ _id: id }, { $push: { files: { $each: files } } });
+    return updateRecord;
+}
+
+export async function deleteFileByIdAndName(id, nameFile) {
+    const deleteRecord = await TrasladoSchema.updateOne({ _id: id }, { $pull: { files: { name: nameFile } } });
+    return deleteRecord;
+}
+
+export async function updateUrlFileById(id, nameFile, urlFacebook) {
+    const updateRecord = await TrasladoSchema.updateOne({ _id: id, "files.name": nameFile }, { $set: { "files.$.url": urlFacebook, "files.$.driveId": null } });
+    return updateRecord;
 }

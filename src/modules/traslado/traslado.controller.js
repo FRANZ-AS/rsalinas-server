@@ -1,17 +1,48 @@
-import { getRecordsTraslado, saveRecordTraslado, updateTraslado as updateTrasladoById, deleteTrasladoById } from "./traslado.service.js";
+import { getRecordsTraslado, saveRecordTraslado, addFilesById, updateTraslado as updateTrasladoById, deleteTrasladoById, deleteFileByIdAndName, updateUrlFileById } from "./traslado.service.js";
 import { body, validationResult } from 'express-validator';
+import { proccesingFiles } from "../../utils/files.js";
+import { getSourceMediaFacebook, deleteFileInGoogleDrive } from "../../utils/files.js";
 
 export const getTraslados = async (_req, res, _next) => {
     try {
         const records = await getRecordsTraslado(_req.query);
+        const recordsMap = JSON.parse(JSON.stringify(records));
+
+        const data = [];
+            
+        for (const record of recordsMap.data) {
+            
+            let files = [];
+            for (const file of record.files) {
+                
+                if(file.url && file.url.includes('google' && file.facebookId)) {
+                    const dataFace = await getSourceMediaFacebook(file.facebookId);
+                    if(dataFace.source && file.driveId) {
+                        deleteFileInGoogleDrive(file.driveId)
+                        updateUrlFileById(record._id, file.name, dataFace.source);
+                    }
+                    files.push({
+                        ...file,
+                        driveId: dataFace.source ? null : file.driveId,
+                        url: dataFace.source
+                    });
+                } else {
+                    files.push(file);
+                }
+            };
+
+            data.push({ ...record, files: [...files] });
+        }
+    
         res.json({
             success: true,
             message: "Traslados obtenidos correctamente",
-            data: records,
+            data: { ...recordsMap, data: [...data]},
             error: null
         });
 
     } catch (error) {
+        console.log('error:', error);
         _next({
             success: false,
             message: "Error al obtener traslados",
@@ -22,7 +53,6 @@ export const getTraslados = async (_req, res, _next) => {
 }
 
 export const saveTraslado = async (_req, res, _next) => {
-
     
     await Promise.all(validationsCreate.map(validation => validation.run(_req)));
     const errors = validationResult(_req);
@@ -30,6 +60,10 @@ export const saveTraslado = async (_req, res, _next) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
+    let files = [];
+
+    if (_req.files) files = await proccesingFiles(_req.files['files[]'], _req.body.id);
+    if (files.length > 0) _req.body.files = files;
 
     try {
         const record = await saveRecordTraslado(_req.body);
@@ -59,6 +93,22 @@ export const updateTraslado = async (_req, res, _next) => {
     
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        if (_req.files && _req.files['files[]']) {
+            const files = await proccesingFiles(_req.files['files[]'], _req.body.id);
+            if (files.length > 0) {
+                await addFilesById(_req.params.id, files);
+            }
+        }
+    } catch (error) {
+        _next({
+            success: false,
+            message: "Error al actualizar traslado",
+            data: null,
+            error: error
+        })
     }
     
     try {
@@ -95,6 +145,28 @@ export const deleteTraslado = async (_req, res, _next) => {
         _next({
             success: false,
             message: "Error al eliminar traslado",
+            data: null,
+            error: error
+        })
+    }
+
+}
+
+export const deleteFile = async (_req, res, _next) => {
+    try {
+        const id = _req.params.id;
+        const nameFile = _req.body.nameFile;
+        const record = await deleteFileByIdAndName(id, nameFile);
+        res.json({
+            success: true,
+            message: "Archivo eliminado correctamente",
+            data: record,
+            error: null
+        });
+    } catch (error) {
+        _next({
+            success: false,
+            message: "Error al eliminar archivo",
             data: null,
             error: error
         })

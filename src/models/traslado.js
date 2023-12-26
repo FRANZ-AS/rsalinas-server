@@ -49,6 +49,10 @@ const TrasladoSchema = new mongoose.Schema({
     Abogado: { type: String },
     MartilleroJuicio: { type: String },
     MartilleroRenCuenta: { type: String },
+
+    files: {
+        type: [Object],
+      },
  });
 
 // module.exports = mongoose.model('Traslado', TrasladoSchema);
