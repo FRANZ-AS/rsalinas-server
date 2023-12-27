@@ -12,10 +12,10 @@ class Server {
     constructor(){
         this.port = config.PORT;
         this.app = express();
+        this.timeout(); 
         this.cors();
         this.middlewares();
         this.routes();
-        this.timeout(); 
     }
 
     timeout(){
