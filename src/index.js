@@ -17,6 +17,10 @@ class Server {
         this.routes();
         this.timeout();
     }
+    
+    timeout(){
+        this.app.use(timeout('60s'));
+    }
 
     start(){
 
@@ -48,10 +52,6 @@ class Server {
             credentials: true,
             optionsSuccessStatus: 204,
           }));
-    }
-
-    timeout(){
-        this.app.use(timeout('60s'));
     }
 
 }
