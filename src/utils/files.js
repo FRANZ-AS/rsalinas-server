@@ -60,11 +60,13 @@ const processFilesFacebook = async (files, uniqueKey) => {
         'Connection': 'keep-alive',
         'Host': 'graph.facebook.com',
         'Accept': '*/*',
+        'Access-Control-Allow-Origin': '*',
     }
     const headersVideo = {
         'Content-Type': 'multipart/form-data',
         'Connection': 'keep-alive',
         'Accept': '*/*',
+        'Access-Control-Allow-Origin': '*',
     }
     let arrayMedia = [];
 
@@ -143,7 +145,7 @@ const getSourceMediaFacebook = async (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             const url = `${apiGraphFacebook}/${id}?access_token=${access_token_facebook}&fields=source`;
-            const resImage = await fetch(url, {method: 'GET', headers: {'Content-Type': 'application/json'}});
+            const resImage = await fetch(url, {method: 'GET', headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}});
             const dataImage = await resImage.json();
             resolve(dataImage);
         } catch (error) {
