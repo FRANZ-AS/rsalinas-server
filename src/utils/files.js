@@ -79,7 +79,7 @@ const processFilesFacebook = async (files, uniqueKey) => {
                 const response = await fetch(url, {method: 'POST', headers: headersVideo});
                 const data = await response.json();
                 console.log('data publish video franz: ----------- ', data);
-                await wait(8000);
+                // await wait(8000);
                 const dataVideo = await getSourceMediaFacebook(data.id)
                 console.log('dataVideo: ----------- ', dataVideo);
                 arrayMedia.push({
