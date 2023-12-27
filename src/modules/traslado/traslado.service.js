@@ -52,6 +52,17 @@ export async function getRecordsTraslado(req) {
         };
 }
 
+export async function getRecordTrasladoById(id) {
+    const record = await TrasladoSchema.findById(id);
+    return record;
+}
+
+export async function getRecordTrasladoByIdByNameFile(id, nameFile) {
+     const record = await TrasladoSchema.findOne({ _id: id });
+     const objFile = record.files.find(file => file.name === nameFile);
+    return objFile;
+}
+
 export async function saveRecordTraslado(req) {
     const newRecord = new TrasladoSchema(req);
     return await newRecord.save();

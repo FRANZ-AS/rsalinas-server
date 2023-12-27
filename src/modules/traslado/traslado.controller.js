@@ -1,4 +1,4 @@
-import { getRecordsTraslado, saveRecordTraslado, addFilesById, updateTraslado as updateTrasladoById, deleteTrasladoById, deleteFileByIdAndName, updateUrlFileById } from "./traslado.service.js";
+import { getRecordsTraslado, getRecordTrasladoByIdByNameFile, saveRecordTraslado, addFilesById, updateTraslado as updateTrasladoById, deleteTrasladoById, deleteFileByIdAndName, updateUrlFileById } from "./traslado.service.js";
 import { body, validationResult } from 'express-validator';
 import { proccesingFiles } from "../../utils/files.js";
 import { getSourceMediaFacebook, deleteFileInGoogleDrive } from "../../utils/files.js";
@@ -156,6 +156,11 @@ export const deleteFile = async (_req, res, _next) => {
     try {
         const id = _req.params.id;
         const nameFile = _req.body.nameFile;
+        // recuperar objeto de l array de files
+        const objFile = await getRecordTrasladoByIdByNameFile(id, nameFile);
+        if(objFile && objFile.driveId) {
+            deleteFileInGoogleDrive(objFile.driveId);
+        }
         const record = await deleteFileByIdAndName(id, nameFile);
         res.json({
             success: true,
@@ -164,6 +169,7 @@ export const deleteFile = async (_req, res, _next) => {
             error: null
         });
     } catch (error) {
+        console.log('error deletFile:', error);
         _next({
             success: false,
             message: "Error al eliminar archivo",
