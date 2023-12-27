@@ -15,9 +15,9 @@ class Server {
         this.cors();
         this.middlewares();
         this.routes();
-        this.timeout();
+        this.timeout(); 
     }
-    
+
     timeout(){
         this.app.use(timeout('60s'));
     }
