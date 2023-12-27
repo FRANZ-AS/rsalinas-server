@@ -4,6 +4,7 @@ import {router} from './routes/index.js';
 import { handleErrorMiddleware } from './middlewares/error_handler.js';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import timeout from 'connect-timeout';
 class Server {
    port;
    app;
@@ -14,6 +15,7 @@ class Server {
         this.cors();
         this.middlewares();
         this.routes();
+        this.timeout();
     }
 
     start(){
@@ -46,6 +48,10 @@ class Server {
             credentials: true,
             optionsSuccessStatus: 204,
           }));
+    }
+
+    timeout(){
+        this.app.use(timeout('60s'));
     }
 
 }
