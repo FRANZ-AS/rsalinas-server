@@ -192,7 +192,8 @@ const buildPDF = async (arrayDocuments, dataCallback, endCallback) => {
 
               doc.fontSize(12).font('Helvetica-Bold');
 
-                if((doc.page.height - doc.y) <= 80){
+                // if((doc.page.height - doc.y) > 80){
+                if(document.files && document.files.length > 0){
                     doc.addPage();
                 }
               doc.text('Archivos: \n');
