@@ -76,7 +76,7 @@ const processFilesFacebook = async (files, uniqueKey) => {
             const url = `${apiVideoFacebook}/${page_id}/videos?access_token=${access_token_facebook}&file_url=${file.url}&description=${uniqueKey}`;
                
             try {
-                const response = await fetch(url, {method: 'POST', headers: headersVideo});
+                const response = await fetch(url, {method: 'GET', headers: headersVideo});
                 const data = await response.json();
                 console.log('data publish video franz: ----------- ', data);
                 await wait(8000);
