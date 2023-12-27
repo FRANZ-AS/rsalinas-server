@@ -71,70 +71,78 @@ const processFilesFacebook = async (files, uniqueKey) => {
     }
     let arrayMedia = [];
 
-    for (const file of files) {
-        if(file.type === 'video') {
-            const url = `${apiVideoFacebook}/${page_id}/videos?access_token=${access_token_facebook}&file_url=${file.url}&description=${uniqueKey}`;
-               
-            try {
-                const response = await fetch(url, {method: 'POST', headers: headersVideo});
-                const data = await response.json();
-                console.log('data publish video franz: ----------- ', data);
-                // await wait(8000);
-                const dataVideo = await getSourceMediaFacebook(data.id)
-                console.log('dataVideo: ----------- ', dataVideo);
-                arrayMedia.push({
-                    url: dataVideo?.source ? dataVideo.source : file.url,
-                    type: file.type,
-                    name: file.name,
-                    status: 'stored',
-                    driveId: file.id,
-                    facebookId: data.id
-                });
-
-                if(dataVideo.source) {
-                    //delete file in google drive
-                    deleteFileInGoogleDrive(file.id);
+    try {
+        for (const file of files) {
+            if(file.type === 'video') {
+                const url = `${apiVideoFacebook}/${page_id}/videos?access_token=${access_token_facebook}&file_url=${file.url}&description=${uniqueKey}`;
+                   
+                try {
+                    const response = await fetch(url, {method: 'POST', headers: headersVideo});
+                    const data = await response.json();
+                    console.log('data publish video franz: ----------- ', data);
+                    // await wait(8000);
+                    const dataVideo = await getSourceMediaFacebook(data.id)
+                    console.log('dataVideo: ----------- ', dataVideo);
+                    arrayMedia.push({
+                        url: dataVideo?.source ? dataVideo.source : file.url,
+                        type: file.type,
+                        name: file.name,
+                        status: 'stored',
+                        driveId: file.id,
+                        facebookId: data.id
+                    });
+    
+                    if(dataVideo.source) {
+                        //delete file in google drive
+                        deleteFileInGoogleDrive(file.id);
+                    }
+    
+                    console.log('response save video: ----------- ', data);
+                } catch (error) {
+                    console.log('error save - get video: ----------- ', error);
                 }
-
-                console.log('response save video: ----------- ', data);
-            } catch (error) {
-                console.log('error save - get video: ----------- ', error);
+                  
             }
+                
               
-        }
-            
-          
-        if(file.type === 'image') {
-            const url = `${apiGraphFacebook}/${page_id}/photos?access_token=${access_token_facebook}&url=${file.url}&message=${uniqueKey}`;
-                
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: headersImage
-                });
-                const data = await response.json();
-                console.log('buscando id de image: ----------- ', data);
-                const dataImage = await getSourceMediaFacebook(data.id);
-                arrayMedia.push({
-                    url: dataImage?.source ? dataImage.source : file.url,
-                    type: file.type,
-                    name: file.name,
-                    status: 'stored',
-                    driveId: file.id,
-                    facebookId: data.id
-                });
-                if(dataImage.source) {
-                    //delete file in google drive
-                    deleteFileInGoogleDrive(file.id);
+            if(file.type === 'image') {
+                const url = `${apiGraphFacebook}/${page_id}/photos?access_token=${access_token_facebook}&url=${file.url}&message=${uniqueKey}`;
+                    
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: headersImage
+                    });
+                    const data = await response.json();
+                    console.log('buscando id de image: ----------- ', data);
+                    const dataImage = await getSourceMediaFacebook(data.id);
+                    arrayMedia.push({
+                        url: dataImage?.source ? dataImage.source : file.url,
+                        type: file.type,
+                        name: file.name,
+                        status: 'stored',
+                        driveId: file.id,
+                        facebookId: data.id
+                    });
+                    if(dataImage.source) {
+                        //delete file in google drive
+                        deleteFileInGoogleDrive(file.id);
+                    }
+    
+                    console.log('response save image: ----------- ', data);
+                } catch (error) {
+                    console.log('error save image: ----------- ', error);
                 }
-
-                console.log('response save image: ----------- ', data);
-            } catch (error) {
-                console.log('error save image: ----------- ', error);
+                    
             }
-                
+        }
+    } catch (error) {
+        for (const file of files){
+            deleteFileInGoogleDrive(file.id)
         }
     }
+
+    
   
         console.log('----arrayMedia: ----------- ', arrayMedia);
         return arrayMedia;
