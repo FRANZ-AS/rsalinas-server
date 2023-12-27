@@ -1,5 +1,6 @@
 import PDFDocument from 'pdfkit-table';
 import moment from 'moment';
+import imageToBase64 from 'image-to-base64';
 
 const buildPDF = async (arrayDocuments, dataCallback, endCallback) => {
   
@@ -187,7 +188,52 @@ const buildPDF = async (arrayDocuments, dataCallback, endCallback) => {
               doc.fontSize(12).font('Helvetica-Bold');
               doc.text('Observaciones:');
               doc.fontSize(8).font('Helvetica');
-              doc.text(document.Observaciones)
+              doc.text(`${document.Observaciones || '-'} \n\n`)
+
+              doc.fontSize(12).font('Helvetica-Bold');
+
+                if((doc.page.height - doc.y) <= 80){
+                    doc.addPage();
+                }
+              doc.text('Archivos: \n');
+              doc.fontSize(10).font('Helvetica-Bold');
+              
+            if(document.files && document.files.length > 0){
+              let isCountImage = 0;
+                for (const file of document.files) {
+                    
+                    if(file.type === 'image') {
+                        doc.text(`IMAGEN: ${file.name} \n`)
+                        try {
+                            const base64 = await imageToBase64Promise(file.url);
+                            doc.image(Buffer.from(base64, 'base64'), {
+                                fit: [470, 250], // Ajusta el tamaño de la imagen según sea necesario
+                                align: 'center',
+                            });
+                            isCountImage++;
+
+                        } catch (error) {
+                            console.log('error image:', error);
+                        }
+
+                        if(isCountImage === 2){
+                            doc.addPage();
+                            isCountImage = 0;
+                        }
+                    }
+                    if(file.type === 'video') {
+                        doc.text(`VIDEO: ${file.name} \n`)
+                        doc.fillColor('blue')
+                        .text(file.url, { link: file.url})
+                        .fillColor('black');
+                    }
+
+                    doc.text('\n')
+                    
+                  }
+            } else {
+                doc.text('Sin archivos');
+            }
 
             if(i < arrayDocuments.length){
                 doc.addPage();
@@ -198,6 +244,23 @@ const buildPDF = async (arrayDocuments, dataCallback, endCallback) => {
          doc.end();
 
   return doc;
+}
+
+const imageToBase64Promise = (url) => {
+    return new Promise((resolve, reject) => {
+        imageToBase64(url) // Image URL
+        .then(
+            (response) => {
+                resolve(response);
+            }
+        )
+        .catch(
+            (error) => {
+                reject(error);
+            }
+        )
+    }
+    );
 }
 
 export {
