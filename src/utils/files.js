@@ -66,6 +66,7 @@ const processFilesFacebook = async (files, uniqueKey) => {
         'Content-Type': 'multipart/form-data',
         'Connection': 'keep-alive',
         'Accept': '*/*',
+        'Host': 'graph-video.facebook.com',
         'Access-Control-Allow-Origin': '*',
     }
     let arrayMedia = [];
