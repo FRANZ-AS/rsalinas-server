@@ -92,3 +92,18 @@ export async function updateUrlFileById(id, nameFile, urlFacebook) {
     const updateRecord = await TrasladoSchema.updateOne({ _id: id, "files.name": nameFile }, { $set: { "files.$.url": urlFacebook, "files.$.driveId": null } });
     return updateRecord;
 }
+
+export async function updateUrlFileByIdFacebook(id, idFacebook, urlFacebook) {
+    console.log('idFacebook:', idFacebook);
+    console.log('urlFacebook:', urlFacebook);
+    console.log('id:', id);
+
+    await TrasladoSchema.updateOne(
+        {_id:id, "files.facebookId": idFacebook},
+        { $set: { "files.$.url": urlFacebook, "files.$.driveId": null } },
+        );
+    
+    const record = await TrasladoSchema.findById(id);
+    const recordFile = record.files.find(file => file.facebookId === idFacebook);
+    return recordFile;
+}

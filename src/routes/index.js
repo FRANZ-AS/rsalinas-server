@@ -51,7 +51,12 @@ router.use('/api/sign-facebook', async (_req, res) => {
  
 });
 
-router.get('/api/prueba', async (_req, res) => {
+router.get('/api/signout-facebook', async (_req, res) => {
+  server.app.set ('facebookAccessToken', null);
+  res.status(200).send('ok');
+} );
+
+router.get('/token', async (_req, res) => {
   console.log('server.app.get:', server.app.get('facebookAccessToken'));
   res.status(200).send(server.app.get('facebookAccessToken'));
 

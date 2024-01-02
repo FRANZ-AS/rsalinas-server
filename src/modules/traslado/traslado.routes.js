@@ -1,5 +1,5 @@
 import  { Router } from 'express';
-import { getTraslados, saveTraslado, deleteTraslado, updateTraslado, deleteFile } from './traslado.controller.js';
+import { getTraslados, saveTraslado, deleteTraslado, updateTraslado, deleteFile, updateLinkImageFB } from './traslado.controller.js';
 import multer from 'multer';
 const router = Router();
 
@@ -11,6 +11,8 @@ router.post('/', upload.fields([{ name: 'files[]', maxCount: 10 }, { name: 'Clie
 router.patch('/:id',  upload.fields([{ name: 'files[]', maxCount: 10 }]), updateTraslado); 
 router.delete('/:id', deleteTraslado);
 router.post('/:id/delete-file', deleteFile); 
+router.post('/update-link-image', updateLinkImageFB);
+
 export {
     router
 };

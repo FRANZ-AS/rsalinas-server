@@ -10,6 +10,16 @@ export class HTTPError extends Error {
 }
 
 export const handleErrorMiddleware = (err, _req, res, _next) => {
+    console.log('errooooooooooooorrrrrr: ', err);
+
+    if (err === 'UnauthorizedError') {
+        return res.status(401).json({
+            status: 'error',
+            statusCode: 401,
+            message: 'Unauthorized',
+        });
+    }
+
     if (err instanceof HTTPError) {
         return res.status(err.statusCode).json({
             status: 'error',

@@ -1,4 +1,4 @@
-import { getRecordsTraslado, getRecordTrasladoByIdByNameFile, saveRecordTraslado, addFilesById, updateTraslado as updateTrasladoById, deleteTrasladoById, deleteFileByIdAndName, updateUrlFileById } from "./traslado.service.js";
+import { getRecordsTraslado, getRecordTrasladoByIdByNameFile, saveRecordTraslado, addFilesById, updateTraslado as updateTrasladoById, deleteTrasladoById, deleteFileByIdAndName, updateUrlFileById, updateUrlFileByIdFacebook } from "./traslado.service.js";
 import { body, validationResult } from 'express-validator';
 import { proccesingFiles } from "../../utils/files.js";
 import { getSourceMediaFacebook, deleteFileInGoogleDrive } from "../../utils/files.js";
@@ -61,11 +61,12 @@ export const saveTraslado = async (_req, res, _next) => {
         return res.status(400).json({ errors: errors.array() });
     }
     let files = [];
-
-    if (_req.files) files = await proccesingFiles(_req.files['files[]'], _req.body.id);
-    if (files.length > 0) _req.body.files = files;
-
+    
     try {
+
+        if (_req.files) files = await proccesingFiles(_req.files['files[]'], _req.body.id);
+        if (files.length > 0) _req.body.files = files;
+
         const record = await saveRecordTraslado(_req.body);
         res.json(
             {
@@ -76,12 +77,18 @@ export const saveTraslado = async (_req, res, _next) => {
             }
         );
     } catch (error) {
-        _next({
-            success: false,
-            message: "Error al guardar traslado",
-            data: null,
-            error: error
-        })
+
+        console.log('error saveTraslado:', error);
+        if (error.message === 'UnauthorizedError') {
+            _next(error.message)
+        } else {
+            _next({
+                success: false,
+                message: "Error al guardar traslado",
+                data: null,
+                error: error
+            })
+        }
     }
 
 }
@@ -103,12 +110,17 @@ export const updateTraslado = async (_req, res, _next) => {
             }
         }
     } catch (error) {
-        _next({
-            success: false,
-            message: "Error al actualizar traslado",
-            data: null,
-            error: error
-        })
+        console.log('error updateTraslado:', error);
+        if (error.message === 'UnauthorizedError') {
+            _next(error.message)
+        } else {
+            _next({
+                success: false,
+                message: "Error al actualizar traslado",
+                data: null,
+                error: error
+            })
+        }
     }
     
     try {
@@ -176,6 +188,35 @@ export const deleteFile = async (_req, res, _next) => {
             data: null,
             error: error
         })
+    }
+
+}
+
+export const updateLinkImageFB = async (_req, res, _next) => {
+    try {
+        const id = _req.body.id;
+        const idFacebook = _req.body.idFacebook;
+        const url =  await getSourceMediaFacebook(idFacebook);
+        const recordFile = await updateUrlFileByIdFacebook(id, idFacebook, url.source);
+        res.json({
+            success: true,
+            message: "Archivo actualizado correctamente",
+            data: recordFile,
+            error: null
+        });
+    } catch (error) {
+        console.log('error updateLinkImageFB:', error.message);
+
+        if (error.message === 'UnauthorizedError') {
+            _next(error.message)
+        } else {
+            _next({
+                success: false,
+                message: "Error al actualizar archivo",
+                data: null,
+                error: error
+            })
+        }
     }
 
 }
