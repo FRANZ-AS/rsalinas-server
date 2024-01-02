@@ -56,7 +56,5 @@ class Server {
 
 }
 
-const server = new Server();
+export const server = new Server();
 server.start();
-
-// export default Server;
