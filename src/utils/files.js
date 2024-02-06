@@ -7,7 +7,7 @@ import { server } from '../index.js';
 
 const apiGraphFacebook = 'https://graph.facebook.com/v18.0';
 const apiVideoFacebook = 'https://graph-video.facebook.com/v18.0';
-const PAGE_ID = '196176066914239'; //NIUB951
+const PAGE_ID = '241875695668890'; //NIUB951
 const CLIENT_ID = '246817391757242';
 const KEY_SECRET = '3197b3823ee1442f09bf6aed5e165819';
 

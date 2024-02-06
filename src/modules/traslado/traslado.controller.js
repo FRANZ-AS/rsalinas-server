@@ -64,7 +64,7 @@ export const saveTraslado = async (_req, res, _next) => {
     
     try {
 
-        if (_req.files) files = await proccesingFiles(_req.files['files[]'], _req.body.id);
+        if (_req.files && files.length > 0) files = await proccesingFiles(_req.files['files[]'], _req.body.id);
         if (files.length > 0) _req.body.files = files;
 
         const record = await saveRecordTraslado(_req.body);
